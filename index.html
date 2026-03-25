@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="bgOverlay"></div>
+
+    <div class="container">
+        <h1>Weather App</h1>
+
+        <!-- Search -->
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Enter city">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <!-- Saved Cities -->
+        <div id="savedCities"></div>
+
+        <!-- Alert -->
+        <div id="alertBanner" class="hidden">
+            <p id="alertMessage"></p>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="hidden">Loading...</div>
+
+        <!-- Weather Content -->
+        <div id="weatherContent" class="hidden">
+            <h2 id="cityName"></h2>
+            <img id="icon">
+
+            <p>Temp: <span id="temperature"></span></p>
+            <p>Condition: <span id="condition"></span></p>
+            <p>Humidity: <span id="humidity"></span></p>
+            <p>Wind: <span id="wind"></span></p>
+        </div>
+
+        <!-- Forecast -->
+        <div id="forecast"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
