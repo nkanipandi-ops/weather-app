@@ -24,7 +24,10 @@ let savedCities = JSON.parse(localStorage.getItem("weatherCities")) || [];
 searchBtn.addEventListener("click", () => {
   const city = cityInput.value.trim();
   if (!city) return;
+
   getWeatherByCity(city);
+
+  cityInput.value = ""; // 🔥 clear pannum
 });
 
 // ⌨️ Enter key
@@ -33,9 +36,14 @@ cityInput.addEventListener("keypress", (e) => {
 });
 
 // 📍 Auto location
-navigator.geolocation.getCurrentPosition((pos) => {
-  getWeatherByCoords(pos.coords.latitude, pos.coords.longitude);
-});
+navigator.geolocation.getCurrentPosition(
+  (pos) => {
+    getWeatherByCoords(pos.coords.latitude, pos.coords.longitude);
+  },
+  () => {
+    getWeatherByCity("Chennai"); // ❗ remove this line
+  }
+);
 
 // 🌤 Get by city
 async function getWeatherByCity(city) {
@@ -46,6 +54,7 @@ async function getWeatherByCity(city) {
   const data = await res.json();
 
   updateUI(data);
+  generateAITip(data);
   getForecast(city);
   saveCity(city);
 
@@ -174,3 +183,59 @@ function hideLoader() {
 
 // Start
 renderSavedCities();
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("SW Registered"));
+}
+const toggleBtn = document.getElementById("themeToggle");
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    toggleBtn.textContent = "☀️";
+  } else {
+    toggleBtn.textContent = "🌙";
+  }
+});
+const aiTip = document.getElementById("aiTip");
+
+function generateAITip(data) {
+  const temp = data.main.temp;
+  const condition = data.weather[0].main.toLowerCase();
+
+  let tip = "";
+
+  if (condition.includes("rain")) {
+    tip = "☔ Take an umbrella!";
+  } else if (condition.includes("clear")) {
+    tip = "😎 Wear sunglasses!";
+  } else if (temp > 35) {
+    tip = "🔥 Stay hydrated, it's hot!";
+  } else if (temp < 15) {
+    tip = "🧥 Wear a jacket!";
+  } else {
+    tip = "🌤 Have a nice day!";
+  }
+
+  aiTip.textContent = tip;
+}
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+recognition.onresult = function (event) {
+  const city = event.results[0][0].transcript;
+  cityInput.value = city;
+  getWeatherByCity(city);
+};
+function greeting() {
+  const hour = new Date().getHours();
+  let msg = "";
+
+  if (hour < 12) msg = "🌅 Good Morning!";
+  else if (hour < 18) msg = "☀️ Good Afternoon!";
+  else msg = "🌙 Good Evening!";
+
+  alert(msg);
+}
+
+greeting();
