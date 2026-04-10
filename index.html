@@ -1,54 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#667eea">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-    <div id="bgOverlay"></div>
+    <div class="top-controls">
+        <button id="install-btn" class="control-btn hidden" aria-label="Install App">📱</button>
+        <button id="theme-toggle" class="control-btn" aria-label="Toggle Theme">🌙</button>
+    </div>
+
+    <div id="alert-banner" class="alert-banner hidden"></div>
 
     <div class="container">
-        <h1>Weather App</h1>
-        <button id="themeToggle" class="theme-btn">🌙</button>
-
-        <!-- Search -->
         <div class="search-box">
-            <input type="text" id="cityInput" placeholder="Enter city name">
-            <button id="searchBtn">Search</button>
+            <input type="text" id="city-input" placeholder="Enter city name..." aria-label="Search city">
+            <button id="mic-btn" class="mic-btn hidden" aria-label="Voice Search">🎤</button>
+            <button id="search-btn" aria-label="Search">Search</button>
         </div>
 
-        <!-- Saved Cities -->
-        <div id="savedCities"></div>
+        <div id="loader" class="loader hidden"></div>
 
-        <!-- Alert -->
-        <div id="alertBanner" class="hidden">
-            <p id="alertMessage"></p>
+        <div id="weather-card" class="weather-card hidden">
+            <div class="header">
+                <div>
+                    <h1 id="city-name">City Name</h1>
+                    <span id="aqi-badge" class="aqi-badge">AQI: --</span>
+                </div>
+                <div class="header-right">
+                    <img id="weather-icon" src="" alt="Weather Icon">
+                    <div id="weather-condition">Condition</div>
+                </div>
+            </div>
+            
+            <div class="temperature-section">
+                <div class="temp-wrapper">
+                    <span id="temperature">--</span>
+                    <button id="unit-toggle" class="control-btn unit-toggle">°C</button>
+                </div>
+                <div class="feels-like">Feels like: <span id="feels-like">--</span>°C</div>
+            </div>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <div>Humidity: <span id="humidity">--</span>%</div>
+                    <div class="progress-bar"><div id="humidity-progress" class="progress-fill"></div></div>
+                </div>
+                <div class="detail-item">
+                    <div>UV Index: <span id="uv-index">--</span></div>
+                    <div class="progress-bar"><div id="uv-progress" class="progress-fill"></div></div>
+                </div>
+                <div class="detail-item">
+                    <div style="margin-bottom: 5px;">Wind</div>
+                    <div><span id="wind">--</span> km/h <span id="wind-dir" class="wind-arrow">↑</span> (<span id="wind-text">N</span>)</div>
+                </div>
+                <div class="detail-item">
+                    <div style="margin-bottom: 5px;">Sunrise/Sunset</div>
+                    <div>🌅 <span id="sunrise">--:--</span><br>🌇 <span id="sunset">--:--</span></div>
+                </div>
+            </div>
+
+            <div class="ai-tip" id="ai-tip">Tip: ...</div>
+            
+            <div class="card-footer">
+                <div class="last-updated" id="last-updated">Last updated: --:--</div>
+                <button id="share-btn" class="share-btn hidden">Share 📤</button>
+            </div>
         </div>
 
-        <!-- Loader -->
-        <div id="loader" class="hidden">Loading...</div>
-
-        <!-- Weather Content -->
-        <div id="weatherContent" class="hidden">
-            <h2 id="cityName"></h2>
-            <img id="icon">
-
-            <p>Temp: <span id="temperature"></span></p>
-            <p>Condition: <span id="condition"></span></p>
-            <p>Humidity: <span id="humidity"></span></p>
-            <p>Wind: <span id="wind"></span></p>
-            <p id="aiTip"></p>
+        <div id="hourly-forecast-container" class="forecast-container hidden">
+            <h3>Hourly Forecast</h3>
+            <div id="hourly-forecast" class="forecast-row"></div>
         </div>
 
-        <!-- Forecast -->
-        <div id="forecast"></div>
+        <div id="daily-forecast-container" class="forecast-container hidden">
+            <h3>5-Day Forecast</h3>
+            <div id="forecast" class="forecast-row"></div>
+        </div>
+
+        <div id="chart-container" class="chart-container hidden">
+            <canvas id="temp-chart"></canvas>
+        </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-
 </html>
